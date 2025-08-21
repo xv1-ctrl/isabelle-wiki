@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Photon Lockdown - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Photon Lockdown</h1>
+                        <div class="meta">Posted on Feb 7, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/hardware">hardware</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>We&rsquo;ve located the adversary&rsquo;s location and must now secure access to their Optical Network Terminal to disable their internet connection. Fortunately, we&rsquo;ve obtained a copy of the device&rsquo;s firmware, which is suspected to contain hardcoded credentials. Can you extract the password from it?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) to get the <code>ONT</code> directory</li>
+                            <li>The directory contains <code>fwu_ver</code>, <code>hw_ver</code>, and <code>rootfs</code></li>
+                        </ol>
+                        <pre tabindex="0"><code>└─$ file fwu_ver
+fwu_ver: ASCII text
+
+└─$ file hw_ver
+hw_ver: X1 archive data
+
+
+
+└─$ file rootfs
+rootfs: Squashfs filesystem, little endian, version 4.0, zlib compressed, 10936182 bytes, 910 inodes, blocksize: 131072 bytes, created: Sun Oct  1 07:02:43 2023
+</code></pre>
+                        <ol start="3">
+                            <li>Printing out the two small files I found <code>3.0.5</code> version number, and <code>X1</code> archive version</li>
+                            <li>To analyze the <code>rootfs</code> filesystem, I made a temporary directory in my downloads folder and ran <code>sudo mount rootfs tmp</code> to mount it</li>
+                            <li>CDed into the <code>home</code> directory, <code>ls -la</code>, find a hidden directory called <code>.41fr3d0</code></li>
+                            <li>In <code>.41fr3d0</code> is a file <code>s.txt</code>, which contains nothing but the text &ldquo;almost there&rdquo; &lt;/3</li>
+                            <li>I then realized I was completely wasting my time because I already know the flag format, <code>HTB{}</code></li>
+                            <li>
+                                So I ran <code>grep -r HTB</code> and got the flag<!-- raw HTML omitted -->
+                                <code>HTB{N0w_Y0u_C4n_XXXXX}</code>
+                                <strong>Note</strong>: you can use <code>sudo umount &lt;dir&gt;</code> to unmount the file system from the directory you placed it in and then delete the directory. Since the filesystem is read only, you can&rsquo;t delete it with rm
+                            </li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

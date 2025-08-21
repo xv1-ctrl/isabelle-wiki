@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>The Last Dance - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">The Last Dance</h1>
+                        <div class="meta">Posted on Feb 20, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/crypto">crypto</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>To be accepted into the upper class of the Berford Empire, you had to attend the annual Cha-Cha Ball at the High Court. Little did you know that among the many aristocrats invited, you would find a burned enemy spy. Your goal quickly became to capture him, which you succeeded in doing after putting something in his drink. Many hours passed in your agency&rsquo;s interrogation room, and you eventually learned important information about the enemy agency&rsquo;s secret communications. Can you use what you learned to decrypt the rest of the messages?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) to get the <code>crypto_the_last_dance</code> directory which contains a python script and output file</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># source.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ChaCha20
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> FLAG
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encryptMessage</span>(message, key, nonce):
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> ChaCha20<span style="color:#f92672">.</span>new(key<span style="color:#f92672">=</span>key, nonce<span style="color:#f92672">=</span>iv)
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>encrypt(message)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ciphertext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">writeData</span>(data):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;out.txt&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        f<span style="color:#f92672">.</span>write(data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    message <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Our counter agencies have intercepted your messages and a lot &#34;</span>
+</span></span><span style="display:flex;"><span>    message <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;of your agent&#39;s identities have been exposed. In a matter of &#34;</span>
+</span></span><span style="display:flex;"><span>    message <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;days all of them will be captured&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    key, iv <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>urandom(<span style="color:#ae81ff">32</span>), os<span style="color:#f92672">.</span>urandom(<span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    encrypted_message <span style="color:#f92672">=</span> encryptMessage(message, key, iv)
+</span></span><span style="display:flex;"><span>    encrypted_flag <span style="color:#f92672">=</span> encryptMessage(FLAG, key, iv)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> iv<span style="color:#f92672">.</span>hex() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> encrypted_message<span style="color:#f92672">.</span>hex() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> encrypted_flag<span style="color:#f92672">.</span>hex()
+</span></span><span style="display:flex;"><span>    writeData(data)
+</span></span></code></pre>
+                        </div>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># out.txt</span>
+</span></span><span style="display:flex;"><span>c4a66edfe80227b4fa24d431
+</span></span><span style="display:flex;"><span>7aa34395a258f5893e3db1822139b8c1f04cfab9d757b9b9cca57e1df33d093f07c7f06e06bb6293676f9060a838ea138b6bc9f20b08afeb73120506e2ce7b9b9dcd9e4a421584cfaba2481132dfbdf4216e98e3facec9ba199ca3a97641e9ca9782868d0222a1d7c0d3119b867edaf2e72e2a6f7d344df39a14edc39cb6f960944ddac2aaef324827c36cba67dcb76b22119b43881a3f1262752990
+</span></span><span style="display:flex;"><span>7d8273ceb459e4d4386df4e32e1aecc1aa7aaafda50cb982f6c62623cf6b29693d86b15457aa76ac7e2eef6cf814ae3a8d39c7
+</span></span></code></pre>
+                        </div>
+                        <ol start="2">
+                            <li>ChaCha20 requires a key and a <em>non reusable</em> initialization vector aka <code>iv</code> in the code above</li>
+                            <li>Because <code>iv</code> is used twice and we know the relationship between the plaintext and ciphertext, we can break the encryption</li>
+                            <li>(based on the python script, the top line is the <code>iv</code> hex code, the middle line is the message, and the bottom line is the flag)</li>
+                            <li>I used <code>pwntools</code> for the xor operation, but if you don&rsquo;t want to install it there are tons of tutorials for doing it manually</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>rom pwn <span style="color:#f92672">import</span> xor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># creating ciphertext variables</span>
+</span></span><span style="display:flex;"><span>c_msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;7aa34395a258f5893e3db1822139b8c1f04cfab9d757b9b9cca57e1df33d093f07c7f06e06bb6293676f9060a838ea138b6bc9f20b08afeb73120506e2ce7b9b9dcd9e4a421584cfaba248&gt;</span>
+</span></span><span style="display:flex;"><span>c_flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;7d8273ceb459e4d4386df4e32e1aecc1aa7aaafda50cb982f6c62623cf6b29693d86b15457aa76ac7e2eef6cf814ae3a8d39c7&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># converting variables to bytes</span>
+</span></span><span style="display:flex;"><span>c_msg <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(c_msg)
+</span></span><span style="display:flex;"><span>c_flag <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(c_flag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># creating plaintext message variables</span>
+</span></span><span style="display:flex;"><span>message <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Our counter agencies have intercepted your messages and a lot &#34;</span>
+</span></span><span style="display:flex;"><span>message <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;of your agent&#39;s identities have been exposed. In a matter of &#34;</span>
+</span></span><span style="display:flex;"><span>message <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;days all of them will be captured&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pt <span style="color:#f92672">=</span> message
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># plaintext xor message ciphertext xor flag ciphertext gives us the flag</span>
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> xor(c_msg, c_flag, pt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(flag)
+</span></span></code></pre>
+                        </div>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>└─$ python3 dance.py
+</span></span><span style="display:flex;"><span>b<span style="color:#e6db74">&#39;HTB{und3r57AnD1n9_57R3aM_C1PH3R5_15_51mPl3XXXXXXXXX}\xaf\xe8\x15\x05\x7fK\xd6\xbdQ\xfb\x1a\xf7\xd3\xa7X0\x95J\x9f\x18\r\xc2u\xbe\xc0\x87\xd9\xf7_/)\x85\xb7\x08\x16\xf8\x9e\x93\x82n\xa1=\x8e\xe7W\xe6B\x9ceC\x95\xb3&amp;\xd6y\x8b\xe2+\xc4\xc2\xfe3\xa0e\x01\xe5\x90\x95\xa9_\x8fh\xabDM|\x86\xd3\x02y\x89\xec\xe0/\xba\xfe\xf2V0f\x19\xa5)\xed\x1f\x06wEA\xc2_\xd0z\xce\x87&#39;</span>
+</span></span></code></pre>
+                        </div>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

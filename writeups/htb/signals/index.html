@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Signals - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Signals</h1>
+                        <div class="meta">Posted on Feb 8, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/hardware">hardware</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <p>This is pretty barebones&hellip;sorry lol</p>
+                        <blockquote>
+                            <p>Some amateur radio hackers captured a strange signal from space. A first analysis indicates similarities with signals transmitted by the ISS. Can you decode the signal and get the information?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) to get the <code>Signal.wav</code> file</li>
+                            <li>First I went to <a href="http://www.dcode.fr/spectral-analysis">dcode</a> to run the file through spectral analysis, but I didn&rsquo;t find much there</li>
+                            <li>Looking at the challenge description again, the ISS is mentioned</li>
+                            <li>After exactly one google search (&ldquo;iss signal transmission file type&rdquo;), I found that the ISS uses the <code>PD-120 SSTV</code> format (sstv is the important bit)</li>
+                            <li>Now I looked for tools used to decode SSTV images, and I ended up with <code>mmsstv</code></li>
+                            <li>The <a href="http://hamsoft.ca/pages/mmsstv.php">webpage</a> was a lil sketch but I haven&rsquo;t seen signs of malware since downloading it so it was probably fine</li>
+                            <li>To send the sound from the file directly to <code>mmsstv</code>, we need a <a href="http://vb-audio.com/Cable/">digital cable</a> and <a href="http://www.videolan.org/vlc/">vlc</a> player</li>
+                            <li>I used <a href="http://oe5lxr.at/decode-sstv-with-mmsstv/">this article</a> for help with setting everything up</li>
+                            <li>After the file is done playing, you should have a red background, skull and crossbones, and readable flag on your screen</li>
+                            <li>
+                                If you&rsquo;re having issues, you can also try <code>rxsstv</code> <!-- raw HTML omitted -->
+                                <code>HTB{5l0w-5c4n_73l3v1510n_h4m_r4d10_XXXXXX}</code>
+                            </li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

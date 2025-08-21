@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>RFlag - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">RFlag</h1>
+                        <div class="meta">Posted on Feb 8, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/hardware">hardware</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>We have found the garage where some cyber criminals have all their stuff. Using an SDR device, we captured the signal from the remote key that opens the garage. Can you help us to analyze it?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) and CD into the <code>hardware_rflag</code> directory</li>
+                            <li>Basic info about the signal file</li>
+                        </ol>
+                        <pre tabindex="0"><code>└─$ file signal.cf32
+signal.cf32: Adobe Photoshop Color swatch, version 0, 49212 colors; 1st RGB space (0), w 0xc0bc, x 0, y 0x803c, z 0; 2nd space (32956), w 0, x 0xc03c, y 0, z 0xc0bc
+</code></pre>
+                        <ol start="3">
+                            <li>After looking up how to analyze <code>.cf32</code> files, I found the tool <code>rtl_433</code></li>
+                            <li>I installed it with <code>sudo apt-get install rtl-433</code> and ran <code>rtl_433 -A signal.cf32</code></li>
+                            <li>This was at the bottom of the output</li>
+                        </ol>
+                        <pre tabindex="0"><code>[00] {256} 2a aa aa aa 0c 4e 48 54 42 7b 52 46 5f 48 34 63 6b 31 6e 36 5f 31 73 5f 63 30 30 6c 21 21 21 7d
+</code></pre>
+                        <ol start="6">
+                            <li>This is hex code, so I just decoded it to get the flag
+                                <code>HTB{RF_H4ck1n6_1s_XXXXXXX}</code>
+                            </li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+
+

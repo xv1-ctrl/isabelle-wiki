@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>The Needle - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">The Needle</h1>
+                        <div class="meta">Posted on Feb 8, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/hardware">hardware</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>As a part of our SDLC process, we&rsquo;ve got our firmware ready for security testing. Can you help us by performing a security assessment?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) to get the file <code>firmware.bin</code></li>
+                            <li>Running <code>file</code> and <code>binwalk</code> to find out more information</li>
+                        </ol>
+                        <pre tabindex="0"><code>└─$ file firmware.bin
+firmware.bin: Linux kernel ARM boot executable zImage (big-endian)
+
+└─$ binwalk firmware.bin
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Linux kernel ARM boot executable zImage (big-endian)
+14419         0x3853          xz compressed data
+14640         0x3930          xz compressed data
+538952        0x83948         Squashfs filesystem, little endian, version 4.0, compression:xz, size: 2068458 bytes, 995 inodes, blocksize: 262144 bytes, created: 2021-03-11 03:18:10
+</code></pre>
+                        <ol start="3">
+                            <li>From here I used <code>binwalk -e</code> to extract it, CDed into the extracted directory, and CDed into the <code>squashfs-root</code> directory</li>
+                            <li>At this point I decided to connect to the instance with netcat <code>nc &lt;IP&gt; &lt;PORT&gt;</code></li>
+                            <li>It immediately prompted for a login for user <code>ng-1471916-hwtheneedle-j2sbl-64f9c49bff-jprgk</code></li>
+                            <li>I tried to grep that username recursively for the whole extracted directory, but no luck there</li>
+                            <li>I then ran <code>grep -r login</code> which did return results (these are the most interesting)</li>
+                        </ol>
+                        <pre tabindex="0"><code>squashfs-root/etc/scripts/telnetd.sh:
+telnetd -l &#34;/usr/sbin/login&#34; -u Device_Admin:$sign      -i $lf &amp;
+squashfs-root/usr/lib/lua/luci/model/cbi/admin_system/admin.lua:ra = s:option(Flag, &#34;RootPasswordAuth&#34;, translate(&#34;Allow root logins with password&#34;),
+squashfs-root/usr/lib/lua/luci/model/cbi/admin_system/admin.lua:        translate(&#34;Allow the &lt;em&gt;root&lt;/em&gt; user to login with password&#34;))
+</code></pre>
+                        <ol start="8">
+                            <li>It appears that we now have a username, <code>Device_Admin</code></li>
+                            <li>From here we can search for the referenced <code>sign</code> file with <code>file / -name sign 2&gt;dev/null</code> (the /dev/null ensures that all the permission denied errors aren&rsquo;t echoed to terminal)</li>
+                        </ol>
+                        <pre tabindex="0"><code>/_firmware.bin.extracted/sign
+/_firmware.bin.extracted/squashfs-root/etc/config/sign
+</code></pre>
+                        <ol start="10">
+                            <li>The sign file contains <code>qS6-X/n]u&gt;fVfAt!</code>, which I assume is the password</li>
+                            <li>Now reconnect to the netcat instance, log in with the discovered creds, <code>ls</code> and cat out the flag.txt file
+                                <code>HTB{4_hug3_blund3r_XXXXXX_!!}</code>
+                            </li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

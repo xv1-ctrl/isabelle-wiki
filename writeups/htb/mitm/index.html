@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Man in the Middle - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Man in the Middle</h1>
+                        <div class="meta">Posted on Feb 10, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/misc">misc</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>Help! One of our red teamers has captured something between a user and their computer, but we&rsquo;ve got no idea what we&rsquo;re looking at! Can you take a look?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the file w password <code>hackthebox</code> (given) to get the <code>misc_mitm</code> directory and <code>mitm.log</code> file</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>└─$ file mitm.log
+</span></span><span style="display:flex;"><span>mitm.log: BTSnoop version 1,
+</span></span></code></pre>
+                        </div>
+                        <ol start="2">
+                            <li>The <code>BT Snoop</code> file format is used for storing Bluetooth Host Controller Interface (HCI) packets, typically on android devices</li>
+                            <li>Knowing this, I opened the file with <code>wireshark</code></li>
+                            <li>The first 7 packets use the <code>HCI_MON</code> protocol and send initalization info like system note opcodes, version numbers, and device indexing</li>
+                            <li>The rest of the packets follow the <code>L2CAP</code> protocol</li>
+                            <li>Hovering over the hex values, wireshark shows the byte index. Within the <code>byte payload</code> (bytes 8-14) four bytes change from packet to packet</li>
+                            <li>These are bytes 10 through 12</li>
+                            <li>The majority of the frames have a length of 15, but a few have a length of 17</li>
+                        </ol>
+                        <pre tabindex="0"><code>frame.len==15
+frame.len==17
+</code></pre>
+                        <ol start="9">
+                            <li>At this point I got kinda stuck, so I decided to investigate more about the device specs</li>
+                            <li>Under the wireless tab, there is info on Bluetooth devices, HCI, etc</li>
+                            <li>I started with Bluetooth devices. There was one listed with it&rsquo;s MAC address and OUI, <code>f8:28:19:e4:58:60     LiteonTe</code></li>
+                            <li>Looking up LiteonTe, I got a ton of forums on people getting hacked and the unknown device showing up, or the unkown device just showing up on wifi networks</li>
+                            <li>The Lite-On company makes many devices, one being bluetooth keyboards. Considering the circumstances, a keyboard makes the most sense</li>
+                            <li>Based on the <code>A</code> present in the packet data, and some <a href="http://cdn.sparkfun.com/datasheets/Wireless/Bluetooth/RN-HID-User-Guide-v1.0r.pdf">documentation</a> (page 11), we can determine how data is sent
+                                <img src="imgz/mitm.png" alt="image">
+                            </li>
+                            <li><code>00</code> precedes lowercase letters while <code>02</code> precedes uppercase letters (equal to hitting shift). <code>02 00 04</code> gives us <code>A</code></li>
+                            <li>To find the HTB string, we use the same strategy</li>
+                        </ol>
+                        <pre tabindex="0"><code>frame[10] == 0x02 and frame[12] == 0x2F   --   {
+frame[10] == 0x02 and frame[12] == 0x0B   --   H
+frame[10] == 0x02 and frame[12] == 0x17   --   T
+frame[10] == 0x02 and frame[12] == 0x05   --   B
+frame[10] == 0x02 and frame[12] == 0x30   --   }
+</code></pre>
+                        <ol start="17">
+                            <li>Extracting a flag of unknown length could take a very long time manually, so we write a script, passing through the key/value pairs for the bluetooth encoding.</li>
+                            <li>I tried to stay true to my script kiddie roots and find an already written script to use, but unfortunately that wasn&rsquo;t possible so I had to write my own &lt;/3</li>
+                            <li>Wireshark &gt; save as &gt; pcapng to make it easier to parse</li>
+                            <li>jk I found someone elses script @johngrese on medium</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pcap_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;mitm.pcapng&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>KEYS <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1e</span>: (<span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74">&#39;!&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x1f</span>: (<span style="color:#e6db74">&#39;2&#39;</span>, <span style="color:#e6db74">&#39;@&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x20</span>: (<span style="color:#e6db74">&#39;3&#39;</span>, <span style="color:#e6db74">&#39;#&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x21</span>: (<span style="color:#e6db74">&#39;4&#39;</span>, <span style="color:#e6db74">&#39;$&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x22</span>: (<span style="color:#e6db74">&#39;5&#39;</span>, <span style="color:#e6db74">&#39;%&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x23</span>: (<span style="color:#e6db74">&#39;6&#39;</span>, <span style="color:#e6db74">&#39;^&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x24</span>: (<span style="color:#e6db74">&#39;7&#39;</span>, <span style="color:#e6db74">&#39;&amp;&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x25</span>: (<span style="color:#e6db74">&#39;8&#39;</span>, <span style="color:#e6db74">&#39;*&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x26</span>: (<span style="color:#e6db74">&#39;9&#39;</span>, <span style="color:#e6db74">&#39;(&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x27</span>: (<span style="color:#e6db74">&#39;0&#39;</span>, <span style="color:#e6db74">&#39;)&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2c</span>: (<span style="color:#e6db74">&#39; &#39;</span>, <span style="color:#e6db74">&#39; &#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2d</span>: (<span style="color:#e6db74">&#39;-&#39;</span>, <span style="color:#e6db74">&#39;_&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2e</span>: (<span style="color:#e6db74">&#39;=&#39;</span>, <span style="color:#e6db74">&#39;+&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x2f</span>: (<span style="color:#e6db74">&#39;[&#39;</span>, <span style="color:#e6db74">&#39;{&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x30</span>: (<span style="color:#e6db74">&#39;]&#39;</span>, <span style="color:#e6db74">&#39;}&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x31</span>: (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74">&#39;|&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x33</span>: (<span style="color:#e6db74">&#39;;&#39;</span>, <span style="color:#e6db74">&#39;:&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x34</span>: (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">&#39;</span>, <span style="color:#e6db74">&#39;&#34;&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x35</span>: (<span style="color:#e6db74">&#39;`&#39;</span>, <span style="color:#e6db74">&#39;~&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x36</span>: (<span style="color:#e6db74">&#39;,&#39;</span>, <span style="color:#e6db74">&#39;&lt;&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x37</span>: (<span style="color:#e6db74">&#39;.&#39;</span>, <span style="color:#e6db74">&#39;&gt;&#39;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x38</span>: (<span style="color:#e6db74">&#39;/&#39;</span>, <span style="color:#e6db74">&#39;?&#39;</span>),
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># populate a-z and A-Z</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> offset <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">26</span>):
+</span></span><span style="display:flex;"><span>    KEYS[<span style="color:#ae81ff">0x04</span> <span style="color:#f92672">+</span> offset] <span style="color:#f92672">=</span> (chr(<span style="color:#ae81ff">0x61</span> <span style="color:#f92672">+</span> offset), chr(<span style="color:#ae81ff">0x41</span> <span style="color:#f92672">+</span> offset))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_bytes</span>(data):
+</span></span><span style="display:flex;"><span>    decoded <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> bytes <span style="color:#f92672">in</span> data:
+</span></span><span style="display:flex;"><span>        shift <span style="color:#f92672">=</span> bytes[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x02</span>
+</span></span><span style="display:flex;"><span>        code <span style="color:#f92672">=</span> bytes[<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> code <span style="color:#f92672">in</span> KEYS:
+</span></span><span style="display:flex;"><span>            decoded <span style="color:#f92672">+=</span> KEYS<span style="color:#f92672">.</span>get(code)[<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">if</span> shift <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> decoded
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">parse_capture</span>():
+</span></span><span style="display:flex;"><span>    capture <span style="color:#f92672">=</span> rdpcap(pcap_file)
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> packet <span style="color:#f92672">in</span> capture:
+</span></span><span style="display:flex;"><span>        raw_data <span style="color:#f92672">=</span> packet<span style="color:#f92672">.</span>getlayer(Raw)<span style="color:#f92672">.</span>load
+</span></span><span style="display:flex;"><span>        frame <span style="color:#f92672">=</span> raw_data[<span style="color:#ae81ff">4</span>:]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(frame) <span style="color:#f92672">==</span> <span style="color:#ae81ff">17</span>:
+</span></span><span style="display:flex;"><span>            data<span style="color:#f92672">.</span>append(frame[<span style="color:#ae81ff">10</span>:<span style="color:#ae81ff">13</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> parse_capture()
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">=</span> decode_bytes(data)
+</span></span><span style="display:flex;"><span>    print(flag)
+</span></span></code></pre>
+                        </div>
+                        <ol start="21">
+                            <li>Ran it and got the flag <code>HTB{K3yStR0keS_C0mPrXXXXXX}</code></li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

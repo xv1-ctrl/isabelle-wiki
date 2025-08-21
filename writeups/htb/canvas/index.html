@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Canvas - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Canvas</h1>
+                        <div class="meta">Posted on Feb 4, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/misc">misc</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>We want to update our website but we are unable to because the developer who coded this left today. Can you take a look?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Unzip the <code>Canvas.zip</code> file with the password <code>hackthebox</code> (given)</li>
+                            <li>Now we have <code>css</code> and <code>js</code> directories</li>
+                            <li>I first checked the <code>css</code> directory, which contained a stylesheet and nothing else</li>
+                            <li>It contined this line showing that a password field was used somewhere on the page, but not much else was helpful</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-css" data-lang="css"><span style="display:flex;"><span><span style="color:#f92672">input</span><span style="color:#f92672">[</span><span style="color:#f92672">type</span><span style="color:#f92672">=</span><span style="color:#f92672">text</span><span style="color:#f92672">],</span><span style="color:#f92672">input</span><span style="color:#f92672">[</span><span style="color:#f92672">type</span><span style="color:#f92672">=</span><span style="color:#f92672">password</span><span style="color:#f92672">]</span>{
+</span></span></code></pre>
+                        </div>
+                        <ol start="5">
+                            <li>Next I checked the <code>js</code> directory, which contained nothing but a <code>login.js</code> file</li>
+                            <li>The code was kinda obfuscated, here&rsquo;s some of it</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4e0b</span><span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;\x74\x6f\x53\x74\x72\x69\x6e\x67&#39;</span>,<span style="color:#e6db74">&#39;\x75\x73\x65\x72\x6e\x61\x6d\x65&#39;</span>,<span style="color:#e6db74">&#39;\x63\x6f\x6e\x73\x6f\x6c\x65&#39;</span>,<span style="color:#e6db74">&#39;\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64&#39;</span>,<span style="color:#e6db74">&#39;\x6c\x6f\x67&#39;</span>,<span style="color:#e6db74">&#39;\x62\x69\x6e\x64&#39;</span>,<span style="color:#e6db74">&#39;\x64\x69\x73\x61\x62\x6c\x65\x64&#39;</span>,<span style="color:#e6db74">&#39;\x61\x70\x70\x6c\x79&#39;</span>,<span style="color:#e6db74">&#39;\x61\x64\x6d\x69\x6e&#39;</span>,<span style="color:#e6db74">&#39;\x70\x72\x6f\x74\x6f\x74\x79\x70\x65&#39;</span>,<span style="color:#e6db74">&#39;\x7b\x7d\x2e\x63\x6f\x6e\x73\x74\x72\x75\x63\x74\x6f\x72\x28\x22\x72\x65\x74\x75\x72\x6e\x20\x74\x68\x69\x73\x22\x29\x28\x20\x29&#39;</span>,<span style="color:#e6db74">&#39;\x20\x61\x74\x74\x65\x6d\x70\x74\x3b&#39;</span>,<span style="color:#e6db74">&#39;\x76\x61\x6c\x75\x65&#39;</span>,<span style="color:#e6db74">&#39;\x63\x6f\x6e\x73\x74\x72\x75\x63\x74\x6f\x72&#39;</span>,<span style="color:#e6db74">&#39;\x59\x6f\x75\x20\x68\x61\x76\x65\x20\x6c\x65\x66\x74\x20&#39;</span>,<span style="color:#e6db74">&#39;\x74\x72\x61\x63\x65&#39;</span>,<span style="color:#e6db74">&#39;\x72\x65\x74\x75\x72\x6e\x20\x2f\x22\x20\x2b\x20\x74\x68\x69\x73\x20\x2b\x20\x22\x2f&#39;</span>,<span style="color:#e6db74">&#39;\x74\x61\x62\x6c\x65&#39;</span>,<span style="color:#e6db74">&#39;\x6c\x65\x6e\x67\x74\x68&#39;</span>,<span style="color:#e6db74">&#39;\x5f\x5f\x70\x72\x6f\x74\x6f\x5f\x5f&#39;</span>,<span style="color:#e6db74">&#39;\x65\x72\x72\x6f\x72&#39;</span>,<span style="color:#e6db74">&#39;\x4c\x6f\x67\x69\x6e\x20\x73\x75\x63\x63\x65\x73\x73\x66\x75\x6c\x6c\x79&#39;</span>];(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_0x173c04</span>,<span style="color:#a6e22e">_0x4e0b6e</span>){<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x20fedb</span><span style="color:#f92672">=</span><span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_0x2548ec</span>){<span style="color:#66d9ef">while</span>(<span style="color:#f92672">--</span><span style="color:#a6e22e">_0x2548ec</span>){<span style="color:#a6e22e">_0x173c04</span>[<span style="color:#e6db74">&#39;\x70\x75\x73\x68&#39;</span>](<span style="color:#a6e22e">_0x173c04</span>[<span style="color:#e6db74">&#39;\x73\x68\x69\x66\x74&#39;</span>]());}},<span style="color:#a6e22e">_0x544f36</span><span style="color:#f92672">=</span><span style="color:#66d9ef">function</span>(){<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4c641a</span><span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;\x64\x61\x74\x61&#39;</span><span style="color:#f92672">:</span>{<span style="color:#e6db74">&#39;\x6b\x65\x79&#39;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;\x63\x6f\x6f\x6b\x69\x65&#39;</span>,<span style="color:#e6db74">&#39;\x76\x61\x6c\x75\x65&#39;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;\x74\x69\x6d\x65\x6f\x75\x74&#39;</span>},<span style="color:#e6db74">&#39;\x73\x65\x74\x43\x6f\x6f\x6b\x69\x65&#39;</span><span style="color:#f92672">:</span><span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_0x35c856</span>,<span style="color:#a6e22e">_0x13e7c5</span>,<span style="color:#a6e22e">_0x58186</span>,<span style="color:#a6e22e">_0xf5e7a4</span>){<span style="color:#a6e22e">_0xf5e7a4</span><span style="color:#f92672">=</span><span style="color:#a6e22e">_0xf5e7a4</span><span style="color:#f92672">||</span>{};<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x120843</span><span style="color:#f92672">=</span><span style="color:#a6e22e">_0x13e7c5</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#39;\x3d&#39;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">_0x58186</span>,<span style="color:#a6e22e">_0x3f3096</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0x0</span>;<span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x159a78</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0x0</span>,
+</span></span></code></pre>
+                        </div>
+                        <ol start="7">
+                            <li>I deobfuscated it useing this website: <a href="http://www.dcode.fr/javascript-unobfuscator">http://www.dcode.fr/javascript-unobfuscator</a></li>
+                            <li>(sidenote dcode 4L for everything I&rsquo;m so serious)</li>
+                            <li>And I copied the unobfuscated code to a file I created called login-fixed.js</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">/* contents of login-fixed.js */</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;use strict&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4e0b</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;toString&#34;</span>, <span style="color:#e6db74">&#34;username&#34;</span>, <span style="color:#e6db74">&#34;console&#34;</span>, <span style="color:#e6db74">&#34;getElementById&#34;</span>, <span style="color:#e6db74">&#34;log&#34;</span>, <span style="color:#e6db74">&#34;bind&#34;</span>, <span style="color:#e6db74">&#34;disabled&#34;</span>, <span style="color:#e6db74">&#34;apply&#34;</span>, <span style="color:#e6db74">&#34;admin&#34;</span>, <span style="color:#e6db74">&#34;prototype&#34;</span>, <span style="color:#e6db74">&#39;{}.constructor(&#34;return this&#34;)( )&#39;</span>, <span style="color:#e6db74">&#34; attempt;&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#e6db74">&#34;constructor&#34;</span>, <span style="color:#e6db74">&#34;You have left &#34;</span>, <span style="color:#e6db74">&#34;trace&#34;</span>, <span style="color:#e6db74">&#39;return /&#34; + this + &#34;/&#39;</span>, <span style="color:#e6db74">&#34;table&#34;</span>, <span style="color:#e6db74">&#34;length&#34;</span>, <span style="color:#e6db74">&#34;__proto__&#34;</span>, <span style="color:#e6db74">&#34;error&#34;</span>, <span style="color:#e6db74">&#34;Login successfully&#34;</span>];
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">opts</span>) {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">uri</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">fn</span>(<span style="color:#a6e22e">selected_image</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> (; <span style="color:#f92672">--</span><span style="color:#a6e22e">selected_image</span>;) {
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">data</span>[<span style="color:#e6db74">&#34;push&#34;</span>](<span style="color:#a6e22e">data</span>[<span style="color:#e6db74">&#34;shift&#34;</span>]());
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">gotoNewOfflinePage</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">build</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Cookies</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;data&#34;</span> <span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;key&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;cookie&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;value&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;timeout&#34;</span>
+</span></span><span style="display:flex;"><span>     },
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;setCookie&#34;</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">value</span>, <span style="color:#a6e22e">scheme</span>, <span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">headers</span>) {
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">headers</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">headers</span> <span style="color:#f92672">||</span> {};
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">scheme</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">id</span>;
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x3f3096</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>[<span style="color:#e6db74">&#34;length&#34;</span>];
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">for</span> (; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>[<span style="color:#a6e22e">j</span>];
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">+</span> (<span style="color:#e6db74">&#34;; &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">url</span>);
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>[<span style="color:#a6e22e">url</span>];
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">value</span>[<span style="color:#e6db74">&#34;push&#34;</span>](<span style="color:#a6e22e">v</span>);
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>[<span style="color:#e6db74">&#34;length&#34;</span>];
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">v</span> <span style="color:#f92672">!==</span> <span style="color:#f92672">!!</span>[]) {
+</span></span><span style="display:flex;"><span>           <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">cookie</span> <span style="color:#f92672">+</span> (<span style="color:#e6db74">&#34;=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">v</span>);
+</span></span><span style="display:flex;"><span>         }
+</span></span><span style="display:flex;"><span>       }
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">headers</span>[<span style="color:#e6db74">&#34;cookie&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">cookie</span>;
+</span></span><span style="display:flex;"><span>     },
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;removeCookie&#34;</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">done</span>() {
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;dev&#34;</span>;
+</span></span><span style="display:flex;"><span>     },
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;getCookie&#34;</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getCookie</span>(<span style="color:#a6e22e">match</span>, <span style="color:#a6e22e">href</span>) {
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">match</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">match</span> <span style="color:#f92672">||</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">canCreateDiscussions</span>) {
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">canCreateDiscussions</span>;
+</span></span><span style="display:flex;"><span>       };
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">match</span>(<span style="color:#66d9ef">new</span> RegExp(<span style="color:#e6db74">&#34;(?:^|; )&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">href</span>[<span style="color:#e6db74">&#34;replace&#34;</span>](<span style="color:#e6db74">/([.$?*|{}()[]\/+^])/g</span>, <span style="color:#e6db74">&#34;$1&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;=([^;]*)&#34;</span>));
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">trim</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">direct</span>(<span style="color:#a6e22e">subquest</span>, <span style="color:#a6e22e">maxRedirects</span>) {
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">subquest</span>(<span style="color:#f92672">++</span><span style="color:#a6e22e">maxRedirects</span>);
+</span></span><span style="display:flex;"><span>       };
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">trim</span>(<span style="color:#a6e22e">uri</span>, <span style="color:#a6e22e">opts</span>), <span style="color:#a6e22e">v</span> <span style="color:#f92672">?</span> decodeURIComponent(<span style="color:#a6e22e">v</span>[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">:</span> <span style="color:#66d9ef">undefined</span>;
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   };
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">updatedReverseItemControlData</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">testcase</span>() {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">test</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RegExp(<span style="color:#e6db74">&#34;\\w+ *\\(\\) *{\\w+ *[&#39;|\&#34;].+[&#39;|\&#34;];? *}&#34;</span>);
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">test</span>[<span style="color:#e6db74">&#34;test&#34;</span>](<span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;removeCookie&#34;</span>][<span style="color:#e6db74">&#34;toString&#34;</span>]());
+</span></span><span style="display:flex;"><span>   };
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;updateCookie&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">updatedReverseItemControlData</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">array</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4ac08e</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;updateCookie&#34;</span>]();
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">_0x4ac08e</span>) {
+</span></span><span style="display:flex;"><span>     <span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;setCookie&#34;</span>]([<span style="color:#e6db74">&#34;*&#34;</span>], <span style="color:#e6db74">&#34;counter&#34;</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>   } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">_0x4ac08e</span>) {
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">array</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;getCookie&#34;</span>](<span style="color:#66d9ef">null</span>, <span style="color:#e6db74">&#34;counter&#34;</span>);
+</span></span><span style="display:flex;"><span>     } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">Cookies</span>[<span style="color:#e6db74">&#34;removeCookie&#34;</span>]();
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">gotoNewOfflinePage</span>();
+</span></span><span style="display:flex;"><span>})(<span style="color:#a6e22e">_0x4e0b</span>, <span style="color:#ae81ff">386</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x20fe</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">PocketDropEvent</span>(<span style="color:#a6e22e">ballNumber</span>, <span style="color:#a6e22e">opt_target</span>) {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">ballNumber</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">ballNumber</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ball</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x4e0b</span>[<span style="color:#a6e22e">ballNumber</span>];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ball</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x35c856</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>[];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">myPreferences</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">voronoi</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">getPreferenceKey</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x20fe</span>;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">myPreferences</span>) {
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bytes</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">myPreferences</span>[<span style="color:#a6e22e">getPreferenceKey</span>(<span style="color:#e6db74">&#34;0x11&#34;</span>)](<span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">arguments</span>);
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">myPreferences</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">bytes</span>;
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   } <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>   };
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>[], <span style="color:#a6e22e">voronoi</span>;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>}();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4ac08e</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x35c856</span>(<span style="color:#66d9ef">undefined</span>, <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">gotoNewOfflinePage</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">mountTypeScript</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">register</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x20fe</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">B713</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">mountTypeScript</span>[<span style="color:#a6e22e">register</span>(<span style="color:#e6db74">&#34;0x1&#34;</span>)](<span style="color:#a6e22e">register</span>(<span style="color:#e6db74">&#34;0x4&#34;</span>))()[<span style="color:#a6e22e">register</span>(<span style="color:#e6db74">&#34;0x1&#34;</span>)](<span style="color:#e6db74">&#34;^([^ ]+( +[^ ]+)+)+[^ ]}&#34;</span>);
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">B713</span>[<span style="color:#e6db74">&#34;test&#34;</span>](<span style="color:#a6e22e">_0x4ac08e</span>);
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">gotoNewOfflinePage</span>();
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">_0x4ac08e</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4c641a</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>[];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">myPreferences</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">voronoi</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">getPreferenceKey</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x20fe</span>;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">myPreferences</span>) {
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bytes</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">myPreferences</span>[<span style="color:#a6e22e">getPreferenceKey</span>(<span style="color:#e6db74">&#34;0x11&#34;</span>)](<span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">arguments</span>);
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">myPreferences</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">bytes</span>;
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   } <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>   };
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">y$$</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>[], <span style="color:#a6e22e">voronoi</span>;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>}();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x2548ec</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x4c641a</span>(<span style="color:#66d9ef">undefined</span>, <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">rel2Mstr</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x20fe</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">el</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">render</span> <span style="color:#f92672">=</span> Function(<span style="color:#e6db74">&#34;return (function() &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x14&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;);&#34;</span>);
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">el</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">render</span>();
+</span></span><span style="display:flex;"><span> } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">_0x57823f</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">el</span> <span style="color:#f92672">=</span> window;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">uids</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">el</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xc&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#a6e22e">el</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xc&#34;</span>)] <span style="color:#f92672">||</span> {};
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">levels</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xe&#34;</span>), <span style="color:#e6db74">&#34;warn&#34;</span>, <span style="color:#e6db74">&#34;info&#34;</span>, <span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x8&#34;</span>), <span style="color:#e6db74">&#34;exception&#34;</span>, <span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x5&#34;</span>), <span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x3&#34;</span>)];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> (; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">levels</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x6&#34;</span>)]; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">intval</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x4c641a</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x1&#34;</span>)][<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x13&#34;</span>)][<span style="color:#e6db74">&#34;bind&#34;</span>](<span style="color:#a6e22e">_0x4c641a</span>);
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">levels</span>[<span style="color:#a6e22e">j</span>];
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">same</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">uids</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">||</span> <span style="color:#a6e22e">intval</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">intval</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0x7&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x4c641a</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xf&#34;</span>)](<span style="color:#a6e22e">_0x4c641a</span>);
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">intval</span>[<span style="color:#e6db74">&#34;toString&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">same</span>[<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xa&#34;</span>)][<span style="color:#a6e22e">rel2Mstr</span>(<span style="color:#e6db74">&#34;0xf&#34;</span>)](<span style="color:#a6e22e">same</span>);
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">uids</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">intval</span>;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">_0x2548ec</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">attempt</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">validate</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x20fe</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">oldValue</span> <span style="color:#f92672">=</span> document[<span style="color:#e6db74">&#34;getElementById&#34;</span>](<span style="color:#e6db74">&#34;username&#34;</span>)[<span style="color:#e6db74">&#34;value&#34;</span>];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">newValue</span> <span style="color:#f92672">=</span> document[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0xd&#34;</span>)](<span style="color:#e6db74">&#34;password&#34;</span>)[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x0&#34;</span>)];
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">oldValue</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x12&#34;</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">newValue</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x12&#34;</span>)) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">alert</span>(<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x9&#34;</span>)), window[<span style="color:#e6db74">&#34;location&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dashboard.html&#34;</span>, <span style="color:#f92672">!</span>[];
+</span></span><span style="display:flex;"><span> } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">attempt</span><span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">alert</span>(<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">attempt</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x15&#34;</span>));
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">attempt</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">return</span> document[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0xd&#34;</span>)](<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0xb&#34;</span>))[<span style="color:#e6db74">&#34;disabled&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>[], document[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0xd&#34;</span>)](<span style="color:#e6db74">&#34;password&#34;</span>)[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x10&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>[], document[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0xd&#34;</span>)](<span style="color:#e6db74">&#34;submit&#34;</span>)[<span style="color:#a6e22e">_</span>(<span style="color:#e6db74">&#34;0x10&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>[], <span style="color:#f92672">!</span>[];
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">res</span> <span style="color:#f92672">=</span> String[<span style="color:#e6db74">&#34;fromCharCode&#34;</span>](<span style="color:#ae81ff">72</span>, <span style="color:#ae81ff">84</span>, <span style="color:#ae81ff">66</span>, <span style="color:#ae81ff">123</span>, <span style="color:#ae81ff">87</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">76</span>, <span style="color:#ae81ff">99</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">109</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">95</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">95</span>, <span style="color:#ae81ff">74</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">86</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">53</span>, <span style="color:#ae81ff">67</span>, <span style="color:#ae81ff">82</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">112</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">95</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">98</span>, <span style="color:#ae81ff">70</span>, <span style="color:#ae81ff">117</span>, <span style="color:#ae81ff">53</span>, <span style="color:#ae81ff">67</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">78</span>, <span style="color:#ae81ff">125</span>, <span style="color:#ae81ff">10</span>);
+</span></span></code></pre>
+                        </div>
+                        <ol start="10">
+                            <li>The <code>res</code> variable (bottom of the file) looks like its ascii (or base85) encoded</li>
+                            <li>I just used dcode again for ascii decoding and got the flag!
+                                <code>HTB{W3Lc0m3_70_J4V45CR1p7_XXXXXXXXXXXXXX}</code>
+                            </li>
+                        </ol>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

